@@ -1,0 +1,259 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: helvetica, sans-serif;
+  font-size: 10.5pt;
+  margin: 0 2cm;
+  background: #E2EEFF;
+  counter-reset: level1;
+}
+
+.level1 {
+  page-break-after: always;
+}
+
+.toc {
+  color: #226975;
+  font-size: 1.5em;
+}
+
+.toc a {
+  text-decoration: none;
+  color: #226975;;
+}
+
+tr {
+  page-break-after: always;
+}
+
+.result-count {
+  margin: 0 auto;
+  padding: 0;
+  display: block;
+  clear: both;
+  width: 300pt;
+}
+
+.result-count li {
+  list-style: none;
+  display: block;
+  float: left;
+  margin: auto;
+  text-align: center;
+  font-size: 20pt;
+  width: 100pt;
+  height: 100pt;
+  padding-top: 28pt;
+  color: #226975;
+}
+
+.result-count .high {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+.result-count .medium {
+  background-color: #FFE86B;
+}
+
+.result-count .low {
+  background-color: #C1DBFF;
+}
+
+.result-count .total,
+.result-count .ok-test-count {
+  background-color: white;
+  border: 1px solid #ADD0FF;
+  width: 300pt;
+  height: 50pt;
+  padding-top: 14pt;
+}
+
+.result-count li::after {
+  display: block;
+  position: relative;
+}
+
+.result-count .high::after {
+  content: "High";
+}
+
+.result-count .medium::after {
+  content: "Medium";
+}
+
+.result-count .low::after {
+  content: "Low";
+}
+
+.result-count .total::before {
+  content: "Total: ";
+}
+
+.result-count .ok-test-count::after {
+  display: inline;
+  content: " other checks";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1em;
+  font-weight: normal;
+  page-break-after: avoid;
+  margin: 0;
+  color: #226975;
+  clear: both;
+}
+
+h1 {
+  text-align: right;
+  background-color: #517E86;
+  padding: 4cm 2cm;
+  color: #E2FBFF;
+  margin: 4cm -2cm 4cm -2cm;
+}
+
+h1 .date {
+  font-size: 0.6em;
+  display: block;
+  clear: both;
+  color: rgb(50, 50, 50);
+  font-weight: normal;
+}
+
+h2 {
+  background-color: #517E86;
+  padding: 16pt 20pt;
+  color: #E2FBFF;
+  margin: 0 -2cm;
+  page-break-before: always;
+}
+
+h2:before {
+  counter-increment: level1;
+  content: counter(level1) ". ";
+}
+
+#overview {
+  text-align: center;
+  font-size: 20pt;
+}
+
+#overview h2 {
+  margin-bottom: 40pt
+}
+#overview h3 {
+  margin-bottom: 20pt
+}
+
+.result {
+  margin: 10pt 0;
+  page-break-inside:avoid;
+  background-color: white;
+  border: 0.5pt solid #ADD0FF;
+  border-bottom: 2px solid #ADD0FF;
+  border-radius: 3pt;
+}
+
+.result h4 {
+  padding: 6pt 10pt 4pt 10pt;
+  background-color: #C1DBFF;
+  border-bottom: 1px solid #ADD0FF;
+}
+
+.result-high h4 {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  border-bottom: 0.5pt solid #AF0000;
+}
+
+.result-medium h4 {
+  background-color: #FFE86B;
+  border-bottom: 0.5pt solid #E6D059;
+}
+.tags {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.tag:last-child {
+  padding-bottom: 10pt;
+}
+
+dt.tag {
+  padding: 8pt;
+}
+
+dd.tag {
+  margin-left: 0;
+  padding-left: 20pt;
+  padding-bottom: 3pt;
+  padding-top: 3pt;
+}
+
+dt.tag-solution {
+  border-top: 0.5pt solid rgb(130, 231, 149);
+}
+
+.tag-solution {
+  background: rgb(170, 233, 182);
+}
+
+dt.tag-host, dt.tag-cve {
+  display: none;
+}
+
+dd.tag-host, dd.tag-cve {
+  width: 50%;
+  display: block;
+  border-bottom: 0.5pt solid #ADD0FF;
+  text-align: center;
+  margin: 0 0 4pt 0;
+  padding: 4pt;
+}
+
+dd.tag-cve {
+  border-right: 0.5pt solid #ADD0FF;
+}
+
+.tag-host, .tag-cve {
+  float: right;
+}
+
+.tag-threat {
+  float: right;
+}
+
+@page {
+  size: A4;
+  margin: 1.5cm 0;
+  padding-left: 0;
+  font-family: verdana, sans-serif;
+  font-size: 8pt;
+  color: #226975;
+  background: #E2EEFF;
+  @top-center {
+    content: "SecludIT - Vulnerability Assesment";
+  }
+  @bottom-right {
+    content: "Page " counter(page) " of " counter(pages);
+    margin-right: 2cm;
+  }
+}
+
+@page :first {
+  @top-center {
+    content: none;
+  }
+  @bottom-right {
+    content: none;
+  }
+}

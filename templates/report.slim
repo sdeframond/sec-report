@@ -1,0 +1,38 @@
+doctype html
+html
+  head
+    title SecludIT Vulnerability Report
+    link rel="stylesheet" type="text/css" href="style.css"
+  body
+    h1
+      | SecludIT Vulnerability Report
+      span.date= date.strftime("%Y-%m-%d at %H:%M:%S")
+    section.toc.level1#main-toc
+      ol
+        li: a href="#overview" Result Overview
+        li: a href="#high" High Vulnerabilities
+        li: a href="#medium" Medium Vulnerabilities
+        li: a href="#low" Low Vulnerabilities
+    section.level1#overview
+      h2 Result Overview
+      h3 Host IP
+      p= host
+      h3 Vulnerabilities
+      ul.result-count
+        li.high= results_high.count
+        li.medium= results_medium.count
+        li.low= results_low.count
+        li.total= results.count
+        li.ok-test-count= all_results.count - results.count
+    section#high
+      h2 High Vulnerabilities
+      - results_high.each do |result|
+        == include_slim :result, result
+    section#medium
+      h2 Medium Vulnerabilities
+      - results_medium.each do |result|
+        == include_slim :result, result
+    section#low
+      h2 Low Vulnerabilities
+      - results_low.each do |result|
+        == include_slim :result, result

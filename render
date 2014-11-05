@@ -1,0 +1,131 @@
+#!/usr/bin/env ruby
+
+require 'nokogiri'
+require 'slim'
+require 'tempfile'
+require 'active_support'
+
+DEBUG = !ENV['DEBUG'].nil?
+
+require 'pry' if DEBUG
+
+module SlimHelpers
+  def include_slim(name, scope = self, options = {}, &block)
+    Slim::Template.new("templates/#{name}.slim", options).render(scope, &block)
+  end
+end
+
+module ReportBase
+  def initialize(node)
+    @node = node
+  end
+
+  def self.included(base)
+    base.extend ClassMethods
+  end
+
+  module ClassMethods
+    def text(name, selector = nil, &block)
+      selector ||= name.to_s
+      define_method(name) {
+        value = @node.css(selector).text
+        if block_given?
+          yield value
+        else
+          value
+        end
+      }
+    end
+  end
+end
+
+class Report
+  include SlimHelpers
+  include ReportBase
+
+  text :date, 'scan_start', &:to_datetime
+  text :hole_count, 'result_count hole full'
+  text :info_count, 'result_count info full'
+  text :warning_count, 'result_count warning full'
+  text :host, "host ip"
+
+  def results
+    @results ||= all_results.select{|r| %w{High Medium Low}.include? r.threat}
+  end
+
+  def all_results
+    @all_results ||= @node.css("results result").map {|r| Result.new(r)}
+  end
+
+  def results_high
+    all_results.select{|r| r.threat == "High"}
+  end
+
+  def results_medium
+    all_results.select{|r| r.threat == "Medium"}
+  end
+
+  def results_low
+    all_results.select{|r| r.threat == "Low"}
+  end
+end
+
+class Result
+  include ReportBase
+
+  def id
+    @node.attributes["id"].value
+  end
+
+  text :name
+  text :threat
+  text :description
+  text :host
+  text :subnet
+  text :cve
+  text(:description) {|t| t.gsub('\\', "\n")}
+
+  def tags
+    @tags ||= parse_tags(@node.css("tags").text)
+  end
+
+  private
+
+  def parse_tags(input)
+    d = {}
+    input.split("|").map { |tag|
+      name, value = tag.split("=")
+      d[name] = value.gsub('\\', "")
+    }
+    d
+  end
+end
+
+def main
+  filename_in = ARGV[0]
+  filename_out = ARGV[1]
+
+  unless filename_in && filename_out
+    puts "Usage: render input.xml output.pdf"
+    exit
+  end
+
+  input = File.open(filename_in, 'r')
+  xml = Nokogiri::XML(input)
+  input.close()
+
+  template = Slim::Template.new("templates/report.slim")
+  scope = Report.new(xml)
+  html = template.render(scope)
+
+  html_file = Tempfile.new("#{filename_out.gsub('/','_')}.html")
+  html_file.write(html)
+  html_file.close()
+  if DEBUG
+    `cp #{html_file.path} ./templates/out.html`
+  end
+  `weasyprint #{html_file.path} #{filename_out} --base-url ./templates`
+  html_file.unlink
+end
+
+main()

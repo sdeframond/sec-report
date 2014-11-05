@@ -1,0 +1,13 @@
+section class="result result-#{threat.downcase}" id=id
+  h4= name
+  dl.tags
+    dt.tag.tag-host Host
+    dd.tag.tag-host= host
+    dt.tag.tag-cve CVEs
+    dd.tag.tag-cve= cve
+    - %w{summary insight vuldetect impact affected solution}.each do |name|
+      - if tags[name]
+          dt class="tag tag-#{name}" 
+            = name.titleize
+          dd class="tag tag-#{name}"
+            == tags[name].gsub("\n", '<br />')

@@ -1,0 +1,5 @@
+source 'https://rubygems.org'
+gem 'nokogiri', '~> 1.5.11'
+gem 'pry'
+gem 'slim'
+gem 'activesupport', '~> 2.3.18'
