@@ -83,7 +83,7 @@ class Result
   text :host
   text :subnet
   text :cve
-  text(:description) {|t| t.gsub('\\', "\n")}
+  text(:description) {|t| t.gsub('\\', "")}
 
   def tags
     @tags ||= parse_tags(@node.css("tags").text)

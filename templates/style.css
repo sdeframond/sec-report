@@ -162,6 +162,10 @@ h2:before {
   border-radius: 3pt;
 }
 
+.result p {
+  margin: 8pt;
+}
+
 .result h4 {
   padding: 6pt 10pt 4pt 10pt;
   background-color: #C1DBFF;
@@ -225,10 +229,6 @@ dd.tag-cve {
 }
 
 .tag-host, .tag-cve {
-  float: right;
-}
-
-.tag-threat {
   float: right;
 }
 
